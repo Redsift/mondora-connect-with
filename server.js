@@ -59,9 +59,13 @@ var addOauthService = function (user, options) {
 	if (Meteor.users.findOne(selector)) {
 		throw new Meteor.Error("User already exists");
 	}
-
-	pinEncryptedFieldsToUser(serviceData, user._id);
 	
+	updateOAuthService(user, serviceName, serviceData);
+};
+
+var updateOAuthService = function (user, serviceName, serviceData) {
+	// If oauth-encryption is define, encrypt fields for user
+	pinEncryptedFieldsToUser(serviceData, user._id);	
 	// Add the service to the user object
 	var modifier = {
 		$set: {}
@@ -80,8 +84,6 @@ var addOauthService = function (user, options) {
 var addPasswordService = function (user, options) {
 	// TODO wait for https://github.com/meteor/meteor/pull/2271 to resolve
 };
-
-
 
 //////////////////////////////
 // `addLoginService` method //
@@ -124,5 +126,28 @@ Meteor.methods({
 			.keys()
 			.without("resume", "email")
 			.value();
+	},
+	updateLoginService: function(service, options) {
+		var user = Meteor.user();
+		// Ensure the user is logged in
+		if (!user) {
+			throw new Meteor.Error("Login required");
+		}
+		return _updateLoginService(user, service, options);
 	}
 });
+
+//////////////////////////////
+// Exports                  //
+//////////////////////////////
+var _updateLoginService = function (user, service, options) {
+	console.log('_updateLoginService: ', user, service, options);
+	if(options.oauth) {
+		return updateOAuthService(user, service, options.oauth);
+	}
+	throw new Meteor.Error("Bad request");
+}
+
+ConnectWith = {};
+ConnectWith.updateLoginService = _updateLoginService;
+

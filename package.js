@@ -1,7 +1,7 @@
 Package.describe({
 	name: "mondora:connect-with",
 	summary: "Connect other oauth accounts with an existing one",
-	version: "0.1.3",
+	version: "0.1.100",
 	git: "https://github.com/mondora/mondora-connect-with.git"
 });
 
@@ -16,6 +16,8 @@ Package.onUse(function (api) {
 	// Package files
 	api.addFiles("server.js", "server");
 	api.addFiles("client.js", "client");
+	// Exported namespace
+	api.export('ConnectWith', ['server']);
 });
 
 Package.onTest(function (api) {
