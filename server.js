@@ -141,7 +141,7 @@ Meteor.methods({
 // Exports                  //
 //////////////////////////////
 var _updateLoginService = function (user, service, options) {
-	console.log('_updateLoginService: ', service, options);
+	//console.log('_updateLoginService: ', service, options);
 	if(options.oauth) {
 		return updateOAuthService(user, service, options.oauth);
 	}
